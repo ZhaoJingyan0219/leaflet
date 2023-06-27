@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+ integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+ crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+ integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+ crossorigin=""/></script>
+  </head>
+  <body>
+    <button type="button" class="btn btn-warning" onclick="show_districts();">Show Districts</button>
+<div id="map" style="width:600px;height:400px"></div>
+<script>
+var map = L.map('map').setView([51.505, -0.09], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+ maxZoom: 19,
+ attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+function show_districts(){
+ L.marker([51.5, -0.09]).addTo(map).bindPopup("<b>Hello World!</b><br />I am a popup.").openPopup();
+ }
+
+ function show_districts(){
+  L.marker([22.287111, 114.191667]).addTo(map)
+  .bindPopup('<a href="https://en.wikipedia.org/wiki/North_Point" target="_blank">'+ '<img src="https://
+ upload.wikimedia.org/wikipedia/commons/thumb/c/c4/City_Garden.jpg/250px-City_Garden.jpg"
+ style="width:80px;height:80px;"><br>' +'North_Point'+'</a>').openPopup();
+  }
+
+var circle = L.circle([51.508, -0.11], {
+ color: 'red',
+ fillColor: '#f03',
+ fillOpacity: 0.5,
+ radius: 500
+}).addTo(map).bindPopup("I am a circle.");
+
+var polygon = L.polygon([
+ [51.509, -0.08],
+ [51.503, -0.06],
+ [51.51, -0.047]
+]).addTo(map).bindPopup("I am a polygon.");
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+var items = [];
+var airtable_read_endpoint = "https://api.airtable.com/v0/app1GZXsjINV22oO2/Table%201?api_key=YourAPI_Key";
+ var data = [];
+ $.getJSON(airtable_read_endpoint, function(result){
+ $.each(result.records, function(key,value){
+ items = {};
+ items["name"] = value.fields.Name;
+ items["url"] = value.fields.url;
+ items["image_url"] = value.fields.image_url;
+ items["latitud"] = value.fields.Lat;
+ items["longitud"] = value.fields.Lng;
+ data.push(items);
+ console.log(items);
+ }); // end .each
+ }); // end getJSON
+function show_districts(){
+ for (var i in data) {
+ var latlng = L.latLng({ lat: data[i].latitud, lng: data[i].longitud });
+ L.marker( latlng )
+ .bindPopup( '<a href="' + data[i].url + '" target="_blank">' + '<img src="' + data[i].image_url+'" width =
+"80px"><br>'+data[i].name + '</a>')
+ .addTo(map);
+ }
+ }
+
+</script>
+  </body>
+</html>
